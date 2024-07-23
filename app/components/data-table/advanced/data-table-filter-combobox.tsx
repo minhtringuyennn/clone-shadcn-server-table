@@ -1,15 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import type { DataTableFilterOption } from "@/types"
-import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  PlusIcon,
-  TextIcon,
-} from "@radix-ui/react-icons"
+import * as React from "react";
+import type { DataTableFilterOption } from "~/types";
+import { CaretSortIcon, ChevronDownIcon, PlusIcon, TextIcon } from "@radix-ui/react-icons";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "~/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -17,22 +12,16 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-} from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+  CommandSeparator
+} from "~/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 
 interface DataTableFilterComboboxProps<TData> {
-  options: DataTableFilterOption<TData>[]
-  selectedOptions: DataTableFilterOption<TData>[]
-  setSelectedOptions: React.Dispatch<
-    React.SetStateAction<DataTableFilterOption<TData>[]>
-  >
-  onSelect: () => void
-  children?: React.ReactNode
+  options: DataTableFilterOption<TData>[];
+  selectedOptions: DataTableFilterOption<TData>[];
+  setSelectedOptions: React.Dispatch<React.SetStateAction<DataTableFilterOption<TData>[]>>;
+  onSelect: () => void;
+  children?: React.ReactNode;
 }
 
 export function DataTableFilterCombobox<TData>({
@@ -40,28 +29,20 @@ export function DataTableFilterCombobox<TData>({
   selectedOptions,
   setSelectedOptions,
   onSelect,
-  children,
+  children
 }: DataTableFilterComboboxProps<TData>) {
-  const [value, setValue] = React.useState("")
-  const [open, setOpen] = React.useState(false)
-  const [selectedOption, setSelectedOption] = React.useState<
-    DataTableFilterOption<TData>
-  >(options[0] ?? ({} as DataTableFilterOption<TData>))
+  const [value, setValue] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+  const [selectedOption, setSelectedOption] = React.useState<DataTableFilterOption<TData>>(
+    options[0] ?? ({} as DataTableFilterOption<TData>)
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         {children ?? (
-          <Button
-            variant="outline"
-            size="sm"
-            role="combobox"
-            className="capitalize"
-          >
-            <CaretSortIcon
-              className="mr-2 size-4 shrink-0"
-              aria-hidden="true"
-            />
+          <Button variant="outline" size="sm" role="combobox" className="capitalize">
+            <CaretSortIcon className="mr-2 size-4 shrink-0" aria-hidden="true" />
             Filter
           </Button>
         )}
@@ -73,32 +54,24 @@ export function DataTableFilterCombobox<TData>({
             <CommandEmpty>No item found.</CommandEmpty>
             <CommandGroup>
               {options
-                .filter(
-                  (option) =>
-                    !selectedOptions.some(
-                      (selectedOption) => selectedOption.value === option.value
-                    )
-                )
+                .filter((option) => !selectedOptions.some((selectedOption) => selectedOption.value === option.value))
                 .map((option) => (
                   <CommandItem
                     key={String(option.value)}
                     className="capitalize"
                     value={String(option.value)}
                     onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue)
-                      setOpen(false)
-                      setSelectedOption(option)
+                      setValue(currentValue === value ? "" : currentValue);
+                      setOpen(false);
+                      setSelectedOption(option);
                       setSelectedOptions((prev) => {
-                        return [...prev, { ...option }]
-                      })
-                      onSelect()
+                        return [...prev, { ...option }];
+                      });
+                      onSelect();
                     }}
                   >
                     {option.options.length > 0 ? (
-                      <ChevronDownIcon
-                        className="mr-2 size-4"
-                        aria-hidden="true"
-                      />
+                      <ChevronDownIcon className="mr-2 size-4" aria-hidden="true" />
                     ) : (
                       <TextIcon className="mr-2 size-4" aria-hidden="true" />
                     )}
@@ -110,7 +83,7 @@ export function DataTableFilterCombobox<TData>({
             <CommandGroup>
               <CommandItem
                 onSelect={() => {
-                  setOpen(false)
+                  setOpen(false);
                   setSelectedOptions([
                     ...selectedOptions,
                     {
@@ -118,10 +91,10 @@ export function DataTableFilterCombobox<TData>({
                       label: selectedOption?.label ?? "",
                       value: selectedOption?.value ?? "",
                       options: selectedOption?.options ?? [],
-                      isMulti: true,
-                    },
-                  ])
-                  onSelect()
+                      isMulti: true
+                    }
+                  ]);
+                  onSelect();
                 }}
               >
                 <PlusIcon className="mr-2 size-4" aria-hidden="true" />
@@ -132,5 +105,5 @@ export function DataTableFilterCombobox<TData>({
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
